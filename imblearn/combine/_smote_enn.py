@@ -124,34 +124,31 @@ class SMOTEENN(BaseSampler):
 
     def _validate_estimator(self):
         "Private function to validate SMOTE and ENN objects"
-        if self.smote is not None:
-            if isinstance(self.smote, SMOTE):
-                self.smote_ = clone(self.smote)
-            else:
-                raise ValueError(
-                    f"smote needs to be a SMOTE object."
-                    f"Got {type(self.smote)} instead."
-                )
-        # Otherwise create a default SMOTE
-        else:
+        if self.smote is None:
             self.smote_ = SMOTE(
                 sampling_strategy=self.sampling_strategy,
                 random_state=self.random_state,
                 n_jobs=self.n_jobs,
             )
 
-        if self.enn is not None:
-            if isinstance(self.enn, EditedNearestNeighbours):
-                self.enn_ = clone(self.enn)
-            else:
-                raise ValueError(
-                    f"enn needs to be an EditedNearestNeighbours."
-                    f" Got {type(self.enn)} instead."
-                )
-        # Otherwise create a default EditedNearestNeighbours
+        elif isinstance(self.smote, SMOTE):
+            self.smote_ = clone(self.smote)
         else:
+            raise ValueError(
+                f"smote needs to be a SMOTE object."
+                f"Got {type(self.smote)} instead."
+            )
+        if self.enn is None:
             self.enn_ = EditedNearestNeighbours(
                 sampling_strategy="all", n_jobs=self.n_jobs
+            )
+
+        elif isinstance(self.enn, EditedNearestNeighbours):
+            self.enn_ = clone(self.enn)
+        else:
+            raise ValueError(
+                f"enn needs to be an EditedNearestNeighbours."
+                f" Got {type(self.enn)} instead."
             )
 
     def _fit_resample(self, X, y):

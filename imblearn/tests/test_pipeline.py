@@ -241,7 +241,7 @@ def test_pipeline_init():
 
     # Test clone
     pipe2 = clone(pipe)
-    assert not pipe.named_steps["svc"] is pipe2.named_steps["svc"]
+    assert pipe.named_steps["svc"] is not pipe2.named_steps["svc"]
 
     # Check that apart from estimators, the parameters are the same
     params = pipe.get_params(deep=True)

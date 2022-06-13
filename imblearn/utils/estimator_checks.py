@@ -92,11 +92,9 @@ def _yield_all_checks(estimator):
         return
     # trigger our checks if this is a SamplerMixin
     if hasattr(estimator, "fit_resample"):
-        for check in _yield_sampler_checks(estimator):
-            yield check
+        yield from _yield_sampler_checks(estimator)
     if hasattr(estimator, "predict"):
-        for check in _yield_classifier_checks(estimator):
-            yield check
+        yield from _yield_classifier_checks(estimator)
 
 
 def parametrize_with_checks(estimators):
@@ -398,8 +396,7 @@ def check_samplers_sample_indices(name, sampler_orig):
         random_state=0,
     )
     sampler.fit_resample(X, y)
-    sample_indices = sampler._get_tags().get("sample_indices", None)
-    if sample_indices:
+    if sample_indices := sampler._get_tags().get("sample_indices", None):
         assert hasattr(sampler, "sample_indices_") is sample_indices
     else:
         assert not hasattr(sampler, "sample_indices_")

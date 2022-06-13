@@ -198,23 +198,22 @@ def repr_errors(res, estimator=None, method: Optional[str] = None) -> str:
                 "possibly because this is a property."
             )
 
-        obj_name = estimator.__name__ + "." + method
+        obj_name = f"{estimator.__name__}.{method}"
     else:
         obj_signature = ""
         obj_name = method
 
-    msg = "\n\n" + "\n\n".join(
+    return "\n\n" + "\n\n".join(
         [
             str(res["file"]),
-            obj_name + str(obj_signature),
+            obj_name + obj_signature,
             res["docstring"],
             "# Errors",
             "\n".join(
-                " - {}: {}".format(code, message) for code, message in res["errors"]
+                f" - {code}: {message}" for code, message in res["errors"]
             ),
         ]
     )
-    return msg
 
 
 @pytest.mark.parametrize("function_name", get_all_functions_names())
@@ -290,4 +289,4 @@ if __name__ == "__main__":
         print(msg)
         sys.exit(1)
     else:
-        print("All docstring checks passed for {}!".format(args.import_path))
+        print(f"All docstring checks passed for {args.import_path}!")

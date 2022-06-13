@@ -126,9 +126,11 @@ TomekLinks # doctest: +NORMALIZE_WHITESPACE
             if target_sample in class_excluded:
                 continue
 
-            if y[nn_index[index_sample]] != target_sample:
-                if nn_index[nn_index[index_sample]] == index_sample:
-                    links[index_sample] = True
+            if (
+                y[nn_index[index_sample]] != target_sample
+                and nn_index[nn_index[index_sample]] == index_sample
+            ):
+                links[index_sample] = True
 
         return links
 

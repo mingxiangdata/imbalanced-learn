@@ -174,10 +174,9 @@ RandomOverSampler # doctest: +NORMALIZE_WHITESPACE
             )
 
         if self.shrinkage_ is not None:
-            missing_shrinkage_keys = (
+            if missing_shrinkage_keys := (
                 self.sampling_strategy_.keys() - self.shrinkage_.keys()
-            )
-            if missing_shrinkage_keys:
+            ):
                 raise ValueError(
                     f"`shrinkage` should contain a shrinkage factor for "
                     f"each class that will be resampled. The missing "

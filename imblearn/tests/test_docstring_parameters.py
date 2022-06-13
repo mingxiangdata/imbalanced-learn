@@ -32,13 +32,12 @@ with warnings.catch_warnings():
     warnings.simplefilter("ignore", FutureWarning)
     # mypy error: Module has no attribute "__path__"
     imblearn_path = imblearn.__path__  # type: ignore  # mypy issue #1422
-    PUBLIC_MODULES = set(
-        [
-            pckg[1]
-            for pckg in walk_packages(prefix="imblearn.", path=imblearn_path)
-            if not ("._" in pckg[1] or ".tests." in pckg[1])
-        ]
-    )
+    PUBLIC_MODULES = {
+        pckg[1]
+        for pckg in walk_packages(prefix="imblearn.", path=imblearn_path)
+        if "._" not in pckg[1] and ".tests." not in pckg[1]
+    }
+
 
 # functions to ignore args / docstring of
 _DOCSTRING_IGNORES = [
@@ -129,13 +128,13 @@ def test_docstring_parameters():
             if fname == "configuration" and name.endswith("setup"):
                 continue
             name_ = _get_func_name(func)
-            if not any(d in name_ for d in _DOCSTRING_IGNORES) and not _is_deprecated(
-                func
-            ):
+            if all(
+                d not in name_ for d in _DOCSTRING_IGNORES
+            ) and not _is_deprecated(func):
                 incorrect += check_docstring_parameters(func)
 
-    msg = "\n".join(incorrect)
     if len(incorrect) > 0:
+        msg = "\n".join(incorrect)
         raise AssertionError("Docstring Error:\n" + msg)
 
 
@@ -221,8 +220,9 @@ def test_fit_docstring_attributes(name, Estimator):
     fit_attr = _get_all_fitted_attributes(est)
     fit_attr_names = [attr.name for attr in attributes]
     undocumented_attrs = set(fit_attr).difference(fit_attr_names)
-    undocumented_attrs = set(undocumented_attrs).difference(skipped_attributes)
-    if undocumented_attrs:
+    if undocumented_attrs := set(undocumented_attrs).difference(
+        skipped_attributes
+    ):
         raise AssertionError(
             f"Undocumented attributes for {Estimator.__name__}: {undocumented_attrs}"
         )

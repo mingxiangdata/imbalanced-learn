@@ -151,28 +151,27 @@ def sensitivity_specificity_support(
     """
     average_options = (None, "micro", "macro", "weighted", "samples")
     if average not in average_options and average != "binary":
-        raise ValueError("average has to be one of " + str(average_options))
+        raise ValueError(f"average has to be one of {average_options}")
 
     y_type, y_true, y_pred = _check_targets(y_true, y_pred)
     present_labels = unique_labels(y_true, y_pred)
 
     if average == "binary":
-        if y_type == "binary":
-            if pos_label not in present_labels:
-                if len(present_labels) < 2:
-                    # Only negative labels
-                    return (0.0, 0.0, 0)
-                else:
-                    raise ValueError(
-                        "pos_label=%r is not a valid label: %r"
-                        % (pos_label, present_labels)
-                    )
-            labels = [pos_label]
-        else:
+        if y_type != "binary":
             raise ValueError(
                 "Target is %s but average='binary'. Please "
                 "choose another average setting." % y_type
             )
+        if pos_label not in present_labels:
+            if len(present_labels) < 2:
+                # Only negative labels
+                return (0.0, 0.0, 0)
+            else:
+                raise ValueError(
+                    "pos_label=%r is not a valid label: %r"
+                    % (pos_label, present_labels)
+                )
+        labels = [pos_label]
     elif pos_label not in (None, 1):
         warnings.warn(
             "Note that pos_label (set to %r) is ignored when "
@@ -729,7 +728,7 @@ def make_index_balanced_accuracy(*, alpha=0.1, squared=True):
 
             # check that the scoring function does not need a score
             # and only a prediction
-            prohibitied_y_pred = set(["y_score", "y_prob", "y2"])
+            prohibitied_y_pred = {"y_score", "y_prob", "y2"}
             if prohibitied_y_pred.intersection(params_scoring_func):
                 raise AttributeError(
                     f"The function {scoring_func.__name__} has an unsupported"
@@ -753,13 +752,12 @@ def make_index_balanced_accuracy(*, alpha=0.1, squared=True):
             args_sens_spec = {k: args_scoring_func.arguments[k] for k in common_params}
 
             if scoring_func.__name__ == "geometric_mean_score":
-                if "average" in args_sens_spec:
-                    if args_sens_spec["average"] == "multiclass":
-                        args_sens_spec["average"] = "macro"
-            elif (
-                scoring_func.__name__ == "accuracy_score"
-                or scoring_func.__name__ == "jaccard_score"
-            ):
+                if (
+                    "average" in args_sens_spec
+                    and args_sens_spec["average"] == "multiclass"
+                ):
+                    args_sens_spec["average"] = "macro"
+            elif scoring_func.__name__ in ["accuracy_score", "jaccard_score"]:
                 # We do not support multilabel so the only average supported
                 # is binary
                 args_sens_spec["average"] = "binary"

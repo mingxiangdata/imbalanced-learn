@@ -9,6 +9,7 @@ randomly 2 samples of the same class and interpolating a point between these
 samples.
 """
 
+
 # Authors: Guillaume Lemaitre <g.lemaitre58@gmail.com>
 # License: MIT
 # %%
@@ -38,7 +39,7 @@ idx = rng.randint(len(y), size=2)
 annotation = [r"$x_i$", r"$x_{zi}$"]
 
 for a, i in zip(annotation, idx):
-    ax.annotate(a, (z[i], y[i]), xytext=tuple([z[i] + 0.01, y[i] + 0.005]), fontsize=15)
+    ax.annotate(a, (z[i], y[i]), xytext=(z[i] + 0.01, y[i] + 0.005), fontsize=15)
 
 # draw the circle in which the new sample will generated
 radius = np.sqrt((z[idx[0]] - z[idx[1]]) ** 2 + (y[idx[0]] - y[idx[1]]) ** 2)
@@ -57,9 +58,10 @@ ax.scatter(z_gen, y_gen, s=100)
 ax.annotate(
     r"$x_{new}$",
     (z_gen, y_gen),
-    xytext=tuple([z_gen + 0.01, y_gen + 0.005]),
+    xytext=(z_gen + 0.01, y_gen + 0.005),
     fontsize=15,
 )
+
 
 # make the plot nicer with legend and label
 sns.despine(ax=ax, offset=10)

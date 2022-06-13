@@ -265,7 +265,7 @@ class RUSBoostClassifier(AdaBoostClassifier):
         )
 
         # Only boost the weights if it will fit again
-        if not iboost == self.n_estimators - 1:
+        if iboost != self.n_estimators - 1:
             # Only boost positive weights
             sample_weight *= np.exp(
                 estimator_weight * ((sample_weight > 0) | (estimator_weight < 0))
@@ -318,7 +318,7 @@ class RUSBoostClassifier(AdaBoostClassifier):
         )
 
         # Only boost the weights if I will fit again
-        if not iboost == self.n_estimators - 1:
+        if iboost != self.n_estimators - 1:
             # Only boost positive weights
             sample_weight *= np.exp(estimator_weight * incorrect * (sample_weight > 0))
 

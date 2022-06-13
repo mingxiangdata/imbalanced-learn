@@ -95,10 +95,11 @@ for positive_idx, (neighbors, distance, color) in enumerate(
         ax.plot(
             [X_majority[positive_idx, 0], X_minority[sample_idx, 0]],
             [X_majority[positive_idx, 1], X_minority[sample_idx, 1]],
-            "--" + color,
+            f"--{color}",
             alpha=0.3,
             label=f"Avg. dist.={distance:.2f}" if make_plot == 0 else "",
         )
+
 ax.set_title("NearMiss-1")
 make_plot_despine(ax)
 plt.tight_layout()
@@ -144,10 +145,11 @@ for positive_idx, (neighbors, distance, color) in enumerate(
         ax.plot(
             [X_majority[positive_idx, 0], X_minority[sample_idx, 0]],
             [X_majority[positive_idx, 1], X_minority[sample_idx, 1]],
-            "--" + color,
+            f"--{color}",
             alpha=0.3,
             label=f"Avg. dist.={distance:.2f}" if make_plot == 0 else "",
         )
+
 ax.set_title("NearMiss-2")
 make_plot_despine(ax)
 plt.tight_layout()
@@ -204,10 +206,11 @@ for positive_idx, (neighbors, distance, color) in enumerate(
         ax.plot(
             [X_majority[positive_idx, 0], X_minority[sample_idx, 0]],
             [X_majority[positive_idx, 1], X_minority[sample_idx, 1]],
-            "--" + color,
+            f"--{color}",
             alpha=0.3,
             label=f"Avg. dist.={distance:.2f}" if make_plot == 0 else "",
         )
+
 ax.set_title("NearMiss-3")
 make_plot_despine(ax)
 plt.tight_layout()

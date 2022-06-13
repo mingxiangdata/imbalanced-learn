@@ -140,11 +140,10 @@ ClusterCentroids # doctest: +NORMALIZE_WHITESPACE
             nearest_neighbors.fit(X, y)
             indices = nearest_neighbors.kneighbors(centroids, return_distance=False)
             X_new = _safe_indexing(X, np.squeeze(indices))
+        elif sparse.issparse(X):
+            X_new = sparse.csr_matrix(centroids, dtype=X.dtype)
         else:
-            if sparse.issparse(X):
-                X_new = sparse.csr_matrix(centroids, dtype=X.dtype)
-            else:
-                X_new = centroids
+            X_new = centroids
         y_new = np.array([target_class] * centroids.shape[0], dtype=y.dtype)
 
         return X_new, y_new
@@ -153,18 +152,14 @@ ClusterCentroids # doctest: +NORMALIZE_WHITESPACE
         self._validate_estimator()
 
         if self.voting == "auto":
-            if sparse.issparse(X):
-                self.voting_ = "hard"
-            else:
-                self.voting_ = "soft"
+            self.voting_ = "hard" if sparse.issparse(X) else "soft"
+        elif self.voting in VOTING_KIND:
+            self.voting_ = self.voting
         else:
-            if self.voting in VOTING_KIND:
-                self.voting_ = self.voting
-            else:
-                raise ValueError(
-                    f"'voting' needs to be one of {VOTING_KIND}. "
-                    f"Got {self.voting} instead."
-                )
+            raise ValueError(
+                f"'voting' needs to be one of {VOTING_KIND}. "
+                f"Got {self.voting} instead."
+            )
 
         X_resampled, y_resampled = [], []
         for target_class in np.unique(y):

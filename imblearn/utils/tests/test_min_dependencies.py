@@ -40,7 +40,7 @@ def test_min_dependencies_readme():
             if not matched:
                 continue
 
-            package, version = matched.group(2), matched.group(5)
+            package, version = matched[2], matched[5]
             package = package.lower()
 
             if package in dependent_packages:

@@ -498,14 +498,14 @@ class SMOTENC(SMOTE):
         categorical_features = np.asarray(self.categorical_features)
         if categorical_features.dtype.name == "bool":
             self.categorical_features_ = np.flatnonzero(categorical_features)
+        elif any(
+            cat not in np.arange(self.n_features_) for cat in categorical_features
+        ):
+            raise ValueError(
+                f"Some of the categorical indices are out of range. Indices"
+                f" should be between 0 and {self.n_features_}"
+            )
         else:
-            if any(
-                [cat not in np.arange(self.n_features_) for cat in categorical_features]
-            ):
-                raise ValueError(
-                    f"Some of the categorical indices are out of range. Indices"
-                    f" should be between 0 and {self.n_features_}"
-                )
             self.categorical_features_ = categorical_features
         self.continuous_features_ = np.setdiff1d(
             np.arange(self.n_features_), self.categorical_features_

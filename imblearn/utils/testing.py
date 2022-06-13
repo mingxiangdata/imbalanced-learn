@@ -135,7 +135,7 @@ class _CustomNearestNeighbors(BaseEstimator):
             return distances, indices
         return indices
 
-    def kneighbors_graph(X=None, n_neighbors=None, mode="connectivity"):
+    def kneighbors_graph(self, n_neighbors=None, mode="connectivity"):
         """This method is not used within imblearn but it is required for
         duck-typing."""
         pass

@@ -119,10 +119,10 @@ def test_smotenc(data):
     for cat_idx in categorical_features:
         if sparse.issparse(X):
             assert set(X[:, cat_idx].data) == set(X_resampled[:, cat_idx].data)
-            assert X[:, cat_idx].dtype == X_resampled[:, cat_idx].dtype
         else:
             assert set(X[:, cat_idx]) == set(X_resampled[:, cat_idx])
-            assert X[:, cat_idx].dtype == X_resampled[:, cat_idx].dtype
+
+        assert X[:, cat_idx].dtype == X_resampled[:, cat_idx].dtype
 
 
 # part of the common test which apply to SMOTE-NC even if it is not default

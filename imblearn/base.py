@@ -153,9 +153,7 @@ def is_sampler(estimator):
     is_sampler : bool
         True if estimator is a sampler, otherwise False.
     """
-    if estimator._estimator_type == "sampler":
-        return True
-    return False
+    return estimator._estimator_type == "sampler"
 
 
 class FunctionSampler(BaseSampler):
@@ -327,5 +325,4 @@ class FunctionSampler(BaseSampler):
 
     def _fit_resample(self, X, y):
         func = _identity if self.func is None else self.func
-        output = func(X, y, **(self.kw_args if self.kw_args else {}))
-        return output
+        return func(X, y, **self.kw_args or {})

@@ -268,7 +268,7 @@ def fetch_datasets(
         if download_if_missing and not available:
             makedirs(zenodo_dir, exist_ok=True)
             if verbose:
-                print("Downloading %s" % URL)
+                print(f"Downloading {URL}")
             f = BytesIO(urlopen(URL).read())
             tar = tarfile.open(fileobj=f)
             tar.extractall(path=zenodo_dir)

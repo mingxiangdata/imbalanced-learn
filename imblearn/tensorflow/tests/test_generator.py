@@ -166,7 +166,7 @@ def test_balanced_batch_generator_function_sparse(data, keep_sparse):
         batch_size=10,
         random_state=42,
     )
-    for idx in range(steps_per_epoch):
+    for _ in range(steps_per_epoch):
         X_batch, y_batch = next(training_generator)
         if keep_sparse:
             assert sparse.issparse(X_batch)

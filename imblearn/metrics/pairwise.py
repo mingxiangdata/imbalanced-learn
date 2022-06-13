@@ -131,15 +131,15 @@ class ValueDifferenceMetric(BaseEstimator):
         if isinstance(self.n_categories, str) and self.n_categories == "auto":
             # categories are expected to be encoded from 0 to n_categories - 1
             self.n_categories_ = X.max(axis=0) + 1
-        else:
-            if len(self.n_categories) != self.n_features_in_:
-                raise ValueError(
-                    f"The length of n_categories is not consistent with the "
-                    f"number of feature in X. Got {len(self.n_categories)} "
-                    f"elements in n_categories and {self.n_features_in_} in "
-                    f"X."
-                )
+        elif len(self.n_categories) == self.n_features_in_:
             self.n_categories_ = np.array(self.n_categories, copy=False)
+        else:
+            raise ValueError(
+                f"The length of n_categories is not consistent with the "
+                f"number of feature in X. Got {len(self.n_categories)} "
+                f"elements in n_categories and {self.n_features_in_} in "
+                f"X."
+            )
         classes = unique_labels(y)
 
         # list of length n_features of ndarray (n_categories, n_classes)
